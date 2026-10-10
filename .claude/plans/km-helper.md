@@ -1,6 +1,6 @@
 # kmHelper — KM curve to IPD
-Progress: 11/34 (32%)
-Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 08:52 BRT
+Progress: 20/34 (59%)
+Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 09:22 BRT
 
 ## Goal
 A tool at /tools/kmHelper/ that takes a screenshot of a Kaplan-Meier figure, one colour pick per
@@ -22,15 +22,15 @@ https://vanioantunes.com/tools/kmHelper/.
 - [x] 9. core/mask.ts buildMask + matched count
 - [x] 10. core/trace.ts column trace, risers, ticks, gaps, monotone, thinning
 - [x] 11. tests/core/trace.test.ts (clean step, tick, crossing arm, antialias, gap, legend swatch)
-- [ ] 12. scripts/make-fixture.mjs synthetic KM figure PNGs from known IPD
-- [ ] 13. ui: SiteBar, SectionNav, useActiveSection, useMediaQuery, app.css adapted from ssHelper
-- [ ] 14. ui: i18n/en.ts copy for every section
-- [ ] 15. ui: ImagePanel (drop, file, Ctrl+V paste, zoom, pan)
-- [ ] 16. ui: AxesPanel (auto box, four draggable handles, axis values, y unit)
-- [ ] 17. ui: ArmsPanel (eyedropper, hex field, tolerance slider, mask overlay, loupe, dE warning)
-- [ ] 18. ui: ExtractPanel (extract, overlay, point table, tick count, sliders)
-- [ ] 19. App wiring + storage/localStore for the draft
-- [ ] 20. phase 1 gate: typecheck, lint, test; screenshots at 1536 and 390; commit and push
+- [x] 12. scripts/make-fixture.mjs synthetic KM figure PNGs from known IPD
+- [x] 13. ui: SiteBar, SectionNav, useActiveSection, useMediaQuery, app.css adapted from ssHelper
+- [x] 14. ui: i18n/en.ts copy for every section
+- [x] 15. ui: ImagePanel (drop, file, Ctrl+V paste, zoom, pan)
+- [x] 16. ui: AxesPanel (auto box, four draggable handles, axis values, y unit)
+- [x] 17. ui: ArmsPanel (eyedropper, hex field, tolerance slider, mask overlay, loupe, dE warning)
+- [x] 18. ui: ExtractPanel (extract, overlay, point table, tick count, sliders)
+- [x] 19. App wiring + storage/localStore for the draft
+- [x] 20. phase 1 gate: typecheck, lint, test; screenshots at 1536 and 390; commit and push
 
 ### Phase 2 — reconstruct
 - [ ] 21. core/preprocess.ts risk-table reconciliation
@@ -51,5 +51,23 @@ https://vanioantunes.com/tools/kmHelper/.
 - [ ] 34. ship: GitHub repo, Vercel project, vanioAntunes vercel.json + tools card + subnav + docs
 
 ## Notes
+Phase 1 gate passed: typecheck, lint, 78 unit tests, 4 Playwright checks (walk plus axe at 1536
+and 390 px). The accuracy test reads the generated fixture PNG back through the whole pipeline and
+holds both arms within 1 percentage point of survival at every checked time, RMSE under 0.005.
+
+Four defects found and fixed while testing the trace, each now covered: a thick riser's trailing
+column was reported as a censoring mark; the look-ahead took the nearest run in the first column
+that had one, letting a legend swatch hijack a descent; a riser could descend to a level outside
+its own run; and a break straddling a step could never be re-acquired. A fifth was found from the
+screenshots: small events were being read as censoring marks, because in a trial of 120 an event
+drops the curve no further than a mark displaces it. Marks are now told from risers by whether the
+run reaches above the current level, which is what a mark does and a riser never does.
+
+Mark detection is a floor, not a census: marks sharing a pixel column, or sitting on a step, are
+not separable. The UI says so. Guyot does not use mark positions, so this does not affect the
+reconstruction.
+
+No remote yet: the GitHub repository and the Vercel project are created in step 34.
+
 Decisions recorded in the approved plan: own repo, full IPDfromKM parity, optional risk table with
 a low-confidence label, auto-detected plot box with four draggable handles.

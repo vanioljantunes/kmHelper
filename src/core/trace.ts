@@ -115,7 +115,8 @@ export function traceCurve(
   const strokeWidth = Math.max(1, Math.round(median(lengths)));
   const tallMin = Math.max(strokeWidth + 2, Math.ceil(strokeWidth * tallFactor));
   const maxJump = Math.max(3, strokeWidth * 2 + 2);
-  const sameLevel = strokeWidth + 2;
+  /* A level counts as held only within antialiasing distance; see the mark test below. */
+  const sameLevel = Math.max(1, Math.round(strokeWidth / 2));
   /** How far the curve may be re-acquired after a bridged break. */
   const reacquireJump = Math.max(maxJump, Math.round(mask.height * 0.25));
   /**
@@ -205,12 +206,16 @@ export function traceCurve(
       continue;
     }
 
-    // A tall run is either an event or a censoring mark. Two things separate them: a mark is
-    // small (it is drawn at a fixed size, not scaled to a survival drop), and the curve sits at
-    // the same level on both sides of it.
+    // A tall run is either an event or a censoring mark. A mark is drawn at a fixed small size
+    // and sits across the line, so it reaches above the current level; a riser only ever goes
+    // down from it. That difference is what separates them, because comparing the levels on
+    // either side cannot: an event in a large trial drops the curve by only a pixel or two,
+    // which is no further than a mark displaces it.
     const nextLevel = lookAheadLevel(x);
     const couldBeMark = length(picked) <= tickMaxHeight;
-    if (couldBeMark && nextLevel !== null && Math.abs(nextLevel - currentY) <= sameLevel) {
+    const reachesAbove = currentY - picked.start > strokeWidth;
+    const levelHeld = nextLevel !== null && Math.abs(nextLevel - currentY) <= sameLevel;
+    if (couldBeMark && (reachesAbove || levelHeld)) {
       tickColumns.push(x);
       samples.push({ x, y: currentY });
       continue;
