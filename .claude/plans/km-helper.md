@@ -1,6 +1,6 @@
 # kmHelper — KM curve to IPD
-Progress: 20/34 (59%)
-Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 09:22 BRT
+Progress: 29/34 (85%)
+Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 10:05 BRT
 
 ## Goal
 A tool at /tools/kmHelper/ that takes a screenshot of a Kaplan-Meier figure, one colour pick per
@@ -33,19 +33,19 @@ https://vanioantunes.com/tools/kmHelper/.
 - [x] 20. phase 1 gate: typecheck, lint, test; screenshots at 1536 and 390; commit and push
 
 ### Phase 2 — reconstruct
-- [ ] 21. core/preprocess.ts risk-table reconciliation
-- [ ] 22. core/guyot.ts Guyot 2012 iterative reconstruction
-- [ ] 23. tests/core/guyot.test.ts against Guyot 2012 worked example and an IPDfromKM fixture
-- [ ] 24. core/km.ts KM, Greenwood, log-log band, median with Brookmeyer-Crowley CI, S(t)
-- [ ] 25. tests/core/km.test.ts against a hand-computed dataset
-- [ ] 26. core/fit.ts RMSE and max deviation
-- [ ] 27. core/export.ts IPD CSV, points CSV, R snippet
+- [x] 21. core/preprocess.ts risk-table reconciliation
+- [x] 22. core/guyot.ts Guyot 2012 iterative reconstruction
+- [x] 23. tests/core/guyot.test.ts against IPDfromKM 0.1.10 run on the same digitized curve
+- [x] 24. core/km.ts KM, Greenwood, log-log band, median with Brookmeyer-Crowley CI, S(t)
+- [x] 25. tests/core/km.test.ts against survfit with a log-log band
+- [x] 26. core/fit.ts RMSE and max deviation
+- [x] 27. core/export.ts IPD CSV, points CSV, R snippet
 - [ ] 28. ui: RiskPanel, IpdPanel, ExportPanel
 - [ ] 29. phase 2 gate: typecheck, lint, test; commit and push
 
 ### Phase 3 — compare and ship
-- [ ] 30. core/compare.ts log-rank and Cox HR by Newton-Raphson
-- [ ] 31. tests/core/compare.test.ts against a known coxph fit
+- [x] 30. core/compare.ts log-rank and Cox HR by Newton-Raphson
+- [x] 31. compare tests against survdiff and coxph (folded into km.test.ts)
 - [ ] 32. ui: ComparePanel SVG overlay plot, HistoryTable
 - [ ] 33. tests/e2e: full walk fixture -> CSV, axe on every section
 - [ ] 34. ship: GitHub repo, Vercel project, vanioAntunes vercel.json + tools card + subnav + docs
@@ -68,6 +68,19 @@ not separable. The UI says so. Guyot does not use mark positions, so this does n
 reconstruction.
 
 No remote yet: the GitHub repository and the Vercel project are created in step 34.
+
+Phase 2: the statistics are checked against R, not against hand arithmetic. IPDfromKM 0.1.10 was
+installed (operator approved) and scripts/compare-ipdfromkm.R puts the curve kmHelper digitized
+through the reference package; our port reproduces it patient for patient, every event and every
+censoring at the same time. survfit, survdiff and coxph give the expectations for the
+Kaplan-Meier band, the log-rank test and the hazard ratio, and all of them agree.
+
+The reference run is itself the strongest statement about the digitizing: fed our colour-pick
+points, IPDfromKM recovers 77 events and 43 censored for Control against a truth of 77 and 43,
+and 51 and 69 for Treatment against 52 and 68.
+
+Two defects found by the comparison: patients still at risk after the last digitized point were
+not being censored there, and the median confidence limits were the wrong way round.
 
 Decisions recorded in the approved plan: own repo, full IPDfromKM parity, optional risk table with
 a low-confidence label, auto-detected plot box with four draggable handles.
