@@ -1,6 +1,6 @@
 # kmHelper — KM curve to IPD
-Progress: 33/34 (97%)
-Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 10:40 BRT
+Progress: 34/34 (100%)
+Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 11:20 BRT
 
 ## Goal
 A tool at /tools/kmHelper/ that takes a screenshot of a Kaplan-Meier figure, one colour pick per
@@ -48,7 +48,13 @@ https://vanioantunes.com/tools/kmHelper/.
 - [x] 31. compare tests against survdiff and coxph (folded into km.test.ts)
 - [x] 32. ui: ComparePanel SVG plot (history dropped, see notes)
 - [x] 33. tests/e2e: full walk fixture -> CSV, axe on every section
-- [ ] 34. ship: GitHub repo, Vercel project, vanioAntunes vercel.json + tools card + subnav + docs
+- [x] 34. ship: GitHub repo, Vercel project, vanioAntunes vercel.json + tools card + subnav + docs
+
+## Shipped
+- repository: https://github.com/vanioljantunes/kmHelper
+- deployment: https://kmhelper.vercel.app
+- live: https://vanioantunes.com/tools/kmHelper/ (200, loads through the proxy with no failed
+  requests, all nine sections present)
 
 ## Notes
 Phase 1 gate passed: typecheck, lint, 78 unit tests, 4 Playwright checks (walk plus axe at 1536
