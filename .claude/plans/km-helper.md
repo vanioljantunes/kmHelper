@@ -1,6 +1,6 @@
 # kmHelper — KM curve to IPD
-Progress: 29/34 (85%)
-Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 10:05 BRT
+Progress: 33/34 (97%)
+Started: 2026-10-10 08:40 BRT   Updated: 2026-10-10 10:40 BRT
 
 ## Goal
 A tool at /tools/kmHelper/ that takes a screenshot of a Kaplan-Meier figure, one colour pick per
@@ -40,14 +40,14 @@ https://vanioantunes.com/tools/kmHelper/.
 - [x] 25. tests/core/km.test.ts against survfit with a log-log band
 - [x] 26. core/fit.ts RMSE and max deviation
 - [x] 27. core/export.ts IPD CSV, points CSV, R snippet
-- [ ] 28. ui: RiskPanel, IpdPanel, ExportPanel
-- [ ] 29. phase 2 gate: typecheck, lint, test; commit and push
+- [x] 28. ui: RiskPanel, IpdPanel, ExportPanel
+- [x] 29. phase 2 gate: typecheck, lint, test; commit and push
 
 ### Phase 3 — compare and ship
 - [x] 30. core/compare.ts log-rank and Cox HR by Newton-Raphson
 - [x] 31. compare tests against survdiff and coxph (folded into km.test.ts)
-- [ ] 32. ui: ComparePanel SVG overlay plot, HistoryTable
-- [ ] 33. tests/e2e: full walk fixture -> CSV, axe on every section
+- [x] 32. ui: ComparePanel SVG plot (history dropped, see notes)
+- [x] 33. tests/e2e: full walk fixture -> CSV, axe on every section
 - [ ] 34. ship: GitHub repo, Vercel project, vanioAntunes vercel.json + tools card + subnav + docs
 
 ## Notes
@@ -78,6 +78,10 @@ Kaplan-Meier band, the log-rank test and the hazard ratio, and all of them agree
 The reference run is itself the strongest statement about the digitizing: fed our colour-pick
 points, IPDfromKM recovers 77 events and 43 censored for Control against a truth of 77 and 43,
 and 51 and 69 for Treatment against 52 and 68.
+
+History was dropped from the first release. The draft (box, axes, colours, tolerances, risk
+table) already survives a reload, and a list of past runs that cannot hold the figure they came
+from is of little use; it is worth doing once there is a reason to compare runs.
 
 Two defects found by the comparison: patients still at risk after the last digitized point were
 not being censored there, and the median confidence limits were the wrong way round.

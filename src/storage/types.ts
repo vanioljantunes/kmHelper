@@ -6,6 +6,9 @@ export interface DraftArm {
   readonly name: string;
   readonly hex: string | null;
   readonly tolerance: number;
+  readonly riskNumbers: string;
+  readonly total: string;
+  readonly totalEvents: string;
 }
 
 /**
@@ -17,6 +20,8 @@ export interface Draft {
   readonly axes: AxisValues;
   readonly arms: readonly DraftArm[];
   readonly maxGap: number;
+  readonly riskTimes: string;
+  readonly atTimes: string;
 }
 
 export interface DraftStore {

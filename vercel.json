@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/", "destination": "https://vanioantunes.com/tools/kmHelper/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/tools/kmHelper{/}?", "destination": "/index.html" },
+    { "source": "/tools/kmHelper/:path+", "destination": "/:path+" }
+  ]
+}

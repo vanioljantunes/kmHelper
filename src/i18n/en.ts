@@ -136,6 +136,66 @@ export const en = {
   extractTableSurvival: 'Survival',
   extractTableCaption: 'The first and last ten points of {name}.',
   extractTableMore: '{count} more points between.',
+  riskHeading: 'Numbers at risk',
+  riskLead:
+    'The reconstruction needs to know how many patients were still being followed, and when. Copy the numbers printed under the figure.',
+  riskOptional:
+    'Optional, but it is what makes the reconstruction trustworthy. Without it only the arm total is used, one patient is assumed to leave at the published rate nowhere, and the result is marked as weak wherever it appears.',
+  riskTimes: 'Times, as printed under the axis',
+  riskTimesHint: 'Separated by spaces, commas or tabs. For example: 0 12 24 36 48 60',
+  riskNumbers: 'Numbers at risk for {name}',
+  riskTotal: 'Patients in {name}',
+  riskEvents: 'Total events in {name}, if the paper gives it',
+  riskEventsHint: 'Used only to place censoring in the last stretch of the curve.',
+  riskMismatch: 'There are {times} times but {numbers} numbers for {name}.',
+  riskNeedTotal: 'Give the numbers at risk, or at least how many patients were in the arm.',
+
+  ipdHeading: 'The patients',
+  ipdLead:
+    'Each step of the curve is turned back into the patients who must have produced it, by the method of Guyot and colleagues.',
+  ipdRun: 'Reconstruct',
+  ipdRerun: 'Reconstruct again',
+  ipdNeedPoints: 'Read the curves first.',
+  ipdLowConfidence:
+    'Reconstructed from the arm total alone, with no numbers at risk. The curve is reproduced, but how many patients sit behind each step is largely a guess. Do not pool this with other studies without saying so.',
+  ipdPatients: '{count} patients',
+  ipdEvents: '{count} events',
+  ipdCensored: '{count} censored',
+  ipdMedian: 'Median survival',
+  ipdMedianNotReached: 'not reached',
+  ipdMedianValue: '{median} ({lower} to {upper})',
+  ipdMedianOpen: '{median} ({lower} to not reached)',
+  ipdSurvivalAt: 'Survival at',
+  ipdSurvivalAtHint: 'Times separated by spaces or commas.',
+  ipdFit: 'Fit to the digitized curve',
+  ipdFitValue: 'RMSE {rmse}, mean error {mean}, largest error {max}',
+  ipdFitGood: 'The reconstruction follows the curve closely.',
+  ipdFitPoor:
+    'The reconstruction departs from the curve by more than two percentage points somewhere. Check the colour, the tolerance and the axis values before using these data.',
+  ipdFailed: 'The reconstruction failed for {name}: {reason}',
+
+  compareHeading: 'The two arms',
+  compareLead: 'Computed from the reconstructed patients, exactly as it would be from real data.',
+  compareNeedTwo: 'Two arms with reconstructed patients are needed to compare them.',
+  compareHazard: 'Hazard ratio, {second} against {first}',
+  compareHazardValue: '{hr} (95% CI {lower} to {upper})',
+  compareLogRank: 'Log-rank test',
+  compareLogRankValue: 'chi-square {chi} on 1 degree of freedom, p {p}',
+  comparePlot: 'The reconstructed curves',
+  comparePlotAlt:
+    'Kaplan-Meier curves of the reconstructed patients, one line per arm, survival against time.',
+  compareAxisTime: 'Time',
+  compareAxisSurvival: 'Survival',
+
+  exportHeading: 'Download',
+  exportLead: 'The patients, the points, and a script that redoes the analysis in R.',
+  exportIpd: 'Patients (CSV)',
+  exportPoints: 'Digitized points (CSV)',
+  exportScript: 'R script',
+  exportNeedIpd: 'Reconstruct the patients first.',
+  exportCheckHint:
+    'Run the R script against the downloaded patients to check these numbers outside the browser.',
+
   extractSanity:
     'Read the overlay, not the table: if the drawn curve sits on the printed one, the numbers are right.',
 } as const;

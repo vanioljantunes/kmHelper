@@ -10,6 +10,10 @@ export const PAGE_SECTIONS = [
   { id: 'axes', label: en.axesHeading },
   { id: 'arms', label: en.armsHeading },
   { id: 'extract', label: en.extractHeading },
+  { id: 'risk', label: en.riskHeading },
+  { id: 'ipd', label: en.ipdHeading },
+  { id: 'compare', label: en.compareHeading },
+  { id: 'export', label: en.exportHeading },
 ] as const;
 
 const SECTION_IDS = PAGE_SECTIONS.map((section) => section.id);

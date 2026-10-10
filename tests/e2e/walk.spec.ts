@@ -7,7 +7,14 @@ import { expect, test, type Page } from '@playwright/test';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = resolve(HERE, '../fixtures/km-two-arms.png');
 const TRUTH = JSON.parse(readFileSync(resolve(HERE, '../fixtures/km-two-arms.json'), 'utf8')) as {
-  arms: Array<{ name: string; hex: string }>;
+  riskTimes: number[];
+  arms: Array<{
+    name: string;
+    hex: string;
+    total: number;
+    events: number;
+    risk: Array<{ time: number; atRisk: number }>;
+  }>;
 };
 
 /** Drop the fixture onto the page the way a researcher drops a screenshot. */
@@ -46,10 +53,62 @@ test('reads a figure from a dropped screenshot', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Read the curves' }).click();
   for (const arm of TRUTH.arms) {
-    await expect(page.getByRole('heading', { name: arm.name, level: 3 })).toBeVisible();
+    await expect(
+      page.locator('#extract').getByRole('heading', { name: arm.name, level: 3 }),
+    ).toBeVisible();
   }
   await expect(page.getByText(/censoring marks found/).first()).toBeVisible();
   await expect(page.getByText(/^\d+ points/).first()).toBeVisible();
+});
+
+async function fillRiskTable(page: Page): Promise<void> {
+  await page.getByLabel('Times, as printed under the axis').fill(TRUTH.riskTimes.join(' '));
+  for (const arm of TRUTH.arms) {
+    await page
+      .getByLabel(`Numbers at risk for ${arm.name}`)
+      .fill(arm.risk.map((row) => String(row.atRisk)).join(' '));
+    await page.getByLabel(`Patients in ${arm.name}`).fill(String(arm.total));
+  }
+}
+
+test('reconstructs the patients and compares the arms', async ({ page }) => {
+  await page.goto('/');
+  await loadFigure(page);
+  await calibrate(page);
+  await nameArms(page);
+  await page.getByRole('button', { name: 'Read the curves' }).click();
+  await expect(page.getByText(/^\d+ points/).first()).toBeVisible();
+  await fillRiskTable(page);
+  await page.getByRole('button', { name: 'Reconstruct', exact: true }).click();
+
+  // The figure was drawn from 120 patients per arm, so that is what must come back.
+  await expect(page.getByText('120 patients, 51 events, 69 censored')).toBeVisible();
+  await expect(page.getByText('120 patients, 77 events, 43 censored')).toBeVisible();
+  // One arm never reaches a median, the other does; both are stated rather than left blank.
+  await expect(page.getByText('not reached')).toBeVisible();
+  await expect(page.getByText(/Hazard ratio, Control against Treatment/)).toBeVisible();
+  await expect(page.getByText(/Log-rank test/)).toBeVisible();
+  await expect(page.getByRole('img', { name: /Kaplan-Meier curves/ })).toBeVisible();
+
+  const download = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Patients (CSV)' }).click(),
+  ]).then(([event]) => event);
+  expect(download.suggestedFilename()).toBe('kmhelper-ipd.csv');
+});
+
+test('says the reconstruction is weak when there is no risk table', async ({ page }) => {
+  await page.goto('/');
+  await loadFigure(page);
+  await calibrate(page);
+  await nameArms(page);
+  await page.getByRole('button', { name: 'Read the curves' }).click();
+  await expect(page.getByText(/^\d+ points/).first()).toBeVisible();
+  for (const arm of TRUTH.arms) {
+    await page.getByLabel(`Patients in ${arm.name}`).fill(String(arm.total));
+  }
+  await page.getByRole('button', { name: 'Reconstruct', exact: true }).click();
+  await expect(page.getByText(/Reconstructed from the arm total alone/).first()).toBeVisible();
 });
 
 test('has no accessibility violations on any section', async ({ page }) => {
@@ -59,6 +118,9 @@ test('has no accessibility violations on any section', async ({ page }) => {
   await nameArms(page);
   await page.getByRole('button', { name: 'Read the curves' }).click();
   await expect(page.getByText(/^\d+ points/).first()).toBeVisible();
+  await fillRiskTable(page);
+  await page.getByRole('button', { name: 'Reconstruct', exact: true }).click();
+  await expect(page.getByText(/Hazard ratio/)).toBeVisible();
 
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])

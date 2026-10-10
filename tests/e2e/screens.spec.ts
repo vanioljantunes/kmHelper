@@ -10,7 +10,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = resolve(HERE, '../fixtures/km-two-arms.png');
 const OUT = resolve(HERE, '../../.tmp/screens');
 const TRUTH = JSON.parse(readFileSync(resolve(HERE, '../fixtures/km-two-arms.json'), 'utf8')) as {
-  arms: Array<{ name: string; hex: string }>;
+  riskTimes: number[];
+  arms: Array<{
+    name: string;
+    hex: string;
+    total: number;
+    risk: Array<{ time: number; atRisk: number }>;
+  }>;
 };
 
 test('screenshots of the whole walk', async ({ page }, info) => {
@@ -32,7 +38,18 @@ test('screenshots of the whole walk', async ({ page }, info) => {
   await page.getByLabel('Colour').nth(1).fill(second.hex);
   await page.getByRole('button', { name: 'Read the curves' }).click();
   await page.getByText(/^\d+ points/).first().waitFor();
+  await page.getByLabel('Times, as printed under the axis').fill(TRUTH.riskTimes.join(' '));
+  for (const arm of TRUTH.arms) {
+    await page
+      .getByLabel(`Numbers at risk for ${arm.name}`)
+      .fill(arm.risk.map((row) => String(row.atRisk)).join(' '));
+    await page.getByLabel(`Patients in ${arm.name}`).fill(String(arm.total));
+  }
+  await page.getByRole('button', { name: 'Reconstruct', exact: true }).click();
+  await page.getByText(/Hazard ratio/).waitFor();
 
+  await page.locator('#ipd').screenshot({ path: `${OUT}/${name}-ipd.png` });
+  await page.locator('#compare').screenshot({ path: `${OUT}/${name}-compare.png` });
   await page.locator('#axes').screenshot({ path: `${OUT}/${name}-axes.png` });
   await page.locator('#arms').screenshot({ path: `${OUT}/${name}-arms.png` });
   await page.locator('#extract').screenshot({ path: `${OUT}/${name}-extract.png` });
