@@ -31,27 +31,39 @@ function zFor(level: number): number {
 
 /** Inverse standard normal CDF (Acklam), used only for unusual confidence levels. */
 export function inverseNormal(p: number): number {
-  const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269,
-    -30.6647980661472, 2.50662827745924];
-  const b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197,
-    -13.2806815528857];
-  const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373,
-    4.37466414146497, 2.93816398269878];
+  const a = [
+    -39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472,
+    2.50662827745924,
+  ];
+  const b = [
+    -54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857,
+  ];
+  const c = [
+    -0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373,
+    4.37466414146497, 2.93816398269878,
+  ];
   const dd = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
   const pLow = 0.02425;
   if (p < pLow) {
     const q = Math.sqrt(-2 * Math.log(p));
     return (
-      ((((((c[0] ?? 0) * q + (c[1] ?? 0)) * q + (c[2] ?? 0)) * q + (c[3] ?? 0)) * q + (c[4] ?? 0)) * q + (c[5] ?? 0)) /
-      ((((((dd[0] ?? 0) * q + (dd[1] ?? 0)) * q + (dd[2] ?? 0)) * q + (dd[3] ?? 0)) * q + 1))
+      ((((((c[0] ?? 0) * q + (c[1] ?? 0)) * q + (c[2] ?? 0)) * q + (c[3] ?? 0)) * q + (c[4] ?? 0)) *
+        q +
+        (c[5] ?? 0)) /
+      (((((dd[0] ?? 0) * q + (dd[1] ?? 0)) * q + (dd[2] ?? 0)) * q + (dd[3] ?? 0)) * q + 1)
     );
   }
   if (p > 1 - pLow) return -inverseNormal(1 - p);
   const q = p - 0.5;
   const r = q * q;
   return (
-    ((((((a[0] ?? 0) * r + (a[1] ?? 0)) * r + (a[2] ?? 0)) * r + (a[3] ?? 0)) * r + (a[4] ?? 0)) * r + (a[5] ?? 0)) * q /
-    (((((((b[0] ?? 0) * r + (b[1] ?? 0)) * r + (b[2] ?? 0)) * r + (b[3] ?? 0)) * r + (b[4] ?? 0)) * r + 1))
+    (((((((a[0] ?? 0) * r + (a[1] ?? 0)) * r + (a[2] ?? 0)) * r + (a[3] ?? 0)) * r + (a[4] ?? 0)) *
+      r +
+      (a[5] ?? 0)) *
+      q) /
+    ((((((b[0] ?? 0) * r + (b[1] ?? 0)) * r + (b[2] ?? 0)) * r + (b[3] ?? 0)) * r + (b[4] ?? 0)) *
+      r +
+      1)
   );
 }
 
@@ -109,7 +121,10 @@ export function kaplanMeier(rows: readonly IpdRow[], level = 0.95): KmFit {
 }
 
 /** Survival and its band at one time, read off the step function. */
-export function survivalAt(fit: KmFit, time: number): { surv: number; lower: number; upper: number } {
+export function survivalAt(
+  fit: KmFit,
+  time: number,
+): { surv: number; lower: number; upper: number } {
   let current = { surv: 1, lower: 1, upper: 1 };
   for (const step of fit.steps) {
     if (step.time > time) break;
