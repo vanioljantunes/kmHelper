@@ -1905,3 +1905,90 @@ html {
   margin: 0.75rem 0 0.25rem;
   font-size: 1rem;
 }
+
+/* The title block and About. Its own layout: the stylesheet is shared with ssHelper, whose
+   .hero-card is a two-column intro-and-author grid that this page has no second column for. */
+.hero-head {
+  grid-area: hero;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.hero-head h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.6rem, 1.35rem + 1vw, 2.1rem);
+  line-height: 1.15;
+  color: var(--accent);
+}
+
+.hero-head__tagline {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.hero-head h2 {
+  margin: 0 0 0.4rem;
+}
+
+.hero-head p {
+  margin: 0 0 0.6rem;
+  max-width: 70ch;
+}
+
+.hero-head__more {
+  margin-top: 0.25rem;
+}
+
+.hero-head__more > summary {
+  width: fit-content;
+  padding: 0.2rem 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.hero-head__more > summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.hero-head__more h3 {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.hero-head__more ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-head {
+    margin-top: 2.5rem;
+    margin-bottom: 0;
+  }
+}
+
+/* This stylesheet is shared with ssHelper, whose page grid carries an author block and a
+   packages column and splits the hero into two named areas. kmHelper has one hero block and
+   neither of the others, so it states its own areas rather than borrowing those. */
+.app {
+  grid-template-areas:
+    'hero'
+    'tool';
+}
+
+@media (min-width: 1024px) {
+  .app {
+    grid-template-areas:
+      'nav hero'
+      'nav main';
+  }
+}

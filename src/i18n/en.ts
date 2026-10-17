@@ -24,34 +24,30 @@ export const en = {
 
   // The hero and the section navigation.
   appName: 'kmHelper',
-  appTagline: 'Individual patient data from a published Kaplan-Meier figure',
+  appTagline: 'Patient data from a published Kaplan-Meier figure',
   sectionNavLabel: 'Sections',
   sectionNavAbout: 'About',
 
   aboutHeading: 'What this does',
   aboutLead:
-    'Paste a screenshot of a Kaplan-Meier figure, name each arm by its colour, and read back the survival curve as numbers. With the numbers at risk from under the figure, the curve is turned into individual patient data by the method of Guyot and colleagues, which is what a survival meta-analysis needs.',
-  aboutNoClickHeading: 'No clicking along the curve',
+    'Paste a screenshot, name each arm by its colour, and read the curve back as numbers. Add the numbers at risk and it reconstructs individual patient data by the method of Guyot and colleagues.',
   aboutNoClick:
-    'The usual way to digitize a curve is to click on it forty or fifty times. That is slow, and two people never produce the same points. Here the arm is named once by its colour and every matching pixel is read, so the same figure and the same colour always give the same numbers.',
-  aboutLimitsHeading: 'When it will not work',
-  aboutLimitGrey:
-    'Figures printed in grey, where the arms differ by dashes rather than by colour. A colour pick cannot separate them.',
-  aboutLimitScale: 'Log or otherwise non-linear axes. Only linear axes are read.',
-  aboutLimitClose:
-    'Two arms in colours close enough to be confused. The tool says so instead of guessing.',
-  aboutLimitJpeg:
-    'Heavy JPEG artefacts around thin lines. A PNG screenshot traces much more cleanly.',
-  aboutPrivacyHeading: 'Where the image goes',
+    'No clicking along the curve: the arm is named once by colour and every matching pixel is read, so the same figure always gives the same numbers.',
   aboutPrivacy:
-    'Nowhere. Everything runs in this browser; the figure is never uploaded and the tool makes no network requests at all.',
+    'Nothing is uploaded. The figure stays in this browser and the tool makes no network requests.',
+  aboutMore: 'Limits and credit',
+  aboutLimitsHeading: 'When it will not work',
+  aboutLimitGrey: 'Grey figures where arms differ by dashes, not colour.',
+  aboutLimitScale: 'Log or other non-linear axes.',
+  aboutLimitClose: 'Two arms in near-identical colours. It warns rather than guessing.',
+  aboutLimitJpeg: 'Heavy JPEG artefacts on thin lines. PNG traces far better.',
   aboutCitationsHeading: 'Method and credit',
   aboutCitationGuyot:
     'Guyot P, Ades AE, Ouwens MJNM, Welton NJ. Enhanced secondary analysis of survival data: reconstructing the data from published Kaplan-Meier survival curves. BMC Med Res Methodol 2012;12:9.',
   aboutCitationLiu:
     'Liu N, Zhou Y, Lee JJ. IPDfromKM: reconstruct individual patient data from published Kaplan-Meier survival curves. BMC Med Res Methodol 2021;21:111.',
   aboutCredit:
-    'The reconstruction follows the same method as the IPDfromKM R package and Shiny app; the digitizing step is different, and results from both should agree.',
+    'The reconstruction matches the IPDfromKM R package; only the digitizing differs.',
 
   imageHeading: 'The figure',
   imageDrop: 'Drop a screenshot here, paste one with Ctrl+V, or',
